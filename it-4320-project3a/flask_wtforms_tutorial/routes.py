@@ -26,15 +26,24 @@ def stocks():
             else:
                 #query the api using the form data
                 err = None
-                 
+
+                ###################### 
                 #THIS IS WHERE YOU WILL CALL THE METHODS FROM THE CHARTS.PY FILE AND IMPLEMENT YOUR CODE
             
+                request_url = build_URL(time_series, symbol)
+                err = request_url
+                json_data = parse_json(request_url, (end_date - start_date), time_series)
+                open_line = generate_coordinates(json_data, "1. open")
+                high_line = generate_coordinates(json_data, "2. high")
+                low_line = generate_coordinates(json_data, "3. low")
+                close_line = generate_coordinates(json_data, "4. close")
+
+                chart_data = generate_graph(symbol, chart_type, open_line, high_line, low_line, close_line)
                 
-                
-                
+                #######################
                 
                 #This chart variable is what is passed to the stock.html page to render the chart returned from the api
-                chart = "ASSIGN CHART TO THIS VARIABLE"
+                chart = chart_data.render_data_uri()
 
             return render_template("stock.html", form=form, template="form-template", err = err, chart = chart)
     
